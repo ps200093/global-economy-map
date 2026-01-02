@@ -1,0 +1,15 @@
+# ACLED 데이터 샘플
+# 실제 데이터로 교체하세요
+
+event_id_cnty,event_date,year,event_type,sub_event_type,country,region,latitude,longitude,fatalities,notes
+SOM12345,2024-12-15,2024,Battles,Armed clash,Somalia,Eastern Africa,2.0469,-45.3438,12,Armed clash between government forces and Al-Shabaab
+YEM23456,2024-12-10,2024,Violence against civilians,Attack,Yemen,Middle East,15.5527,48.5164,8,Airstrike on residential area in Sana'a
+SSD34567,2024-12-08,2024,Battles,Armed clash,South Sudan,Eastern Africa,4.85,31.6,5,Fighting between rival militias in Unity State
+SYR45678,2024-12-05,2024,Explosions/Remote violence,Shelling/artillery/missile attack,Syria,Middle East,36.2021,37.1343,15,Artillery shelling in Idlib province
+AFG56789,2024-12-01,2024,Violence against civilians,Attack,Afghanistan,Southern Asia,34.5553,69.2075,6,Taliban forces attacked civilians in Kabul
+ETH67890,2024-11-28,2024,Battles,Armed clash,Ethiopia,Eastern Africa,11.5965,37.3914,10,Clashes in Amhara region
+IRQ78901,2024-11-25,2024,Explosions/Remote violence,Suicide bomb,Iraq,Middle East,33.3128,44.3615,22,Suicide bombing at marketplace in Baghdad
+NGA89012,2024-11-20,2024,Violence against civilians,Abduction/forced disappearance,Nigeria,Western Africa,9.0820,8.6753,0,Boko Haram abducted civilians
+PAK90123,2024-11-15,2024,Explosions/Remote violence,Remote explosive/landmine/IED,Pakistan,Southern Asia,30.3753,69.3451,4,IED explosion targeting security forces
+MLI01234,2024-11-10,2024,Battles,Armed clash,Mali,Western Africa,17.5707,-4.0015,8,Armed clash between military and insurgents
+

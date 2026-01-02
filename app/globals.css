@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
 :root {
   --background: #ffffff;
@@ -12,15 +13,143 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Leaflet 스타일 오버라이드 */
+.leaflet-container {
+  font-family: inherit;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  min-width: 200px;
+}
+
+/* 툴팁 스타일 */
+.leaflet-tooltip {
+  background-color: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 12px 16px;
+  font-size: 14px;
+  white-space: nowrap;
+  min-width: 200px;
+}
+
+.leaflet-tooltip-top:before {
+  border-top-color: #e5e7eb;
+}
+
+.leaflet-tooltip-bottom:before {
+  border-bottom-color: #e5e7eb;
+}
+
+.leaflet-tooltip-left:before {
+  border-left-color: #e5e7eb;
+}
+
+.leaflet-tooltip-right:before {
+  border-right-color: #e5e7eb;
+}
+
+/* 마커 호버 효과 */
+.custom-marker:hover > div {
+  transform: scale(1.15) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+}
+
+/* 클러스터 아이콘 호버 효과 */
+.custom-cluster-icon {
+  transition: transform 0.2s;
+}
+
+.custom-cluster-icon:hover {
+  transform: scale(1.1);
+}
+
+.custom-cluster-icon:hover .cluster-tooltip {
+  opacity: 1 !important;
+}
+
+/* 마커 클러스터 스타일 */
+.marker-cluster {
+  background-clip: padding-box;
+  border-radius: 50%;
+}
+
+.marker-cluster div {
+  border-radius: 50%;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* 스크롤바 스타일링 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* 애니메이션 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* 반응형 텍스트 */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
 }
