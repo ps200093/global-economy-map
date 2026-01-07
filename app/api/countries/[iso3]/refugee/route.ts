@@ -45,10 +45,10 @@ export async function GET(
       if (record.coo_iso === iso3) {
         stats.refugeesOriginating += record.refugees || 0;
         stats.idps += record.idps || 0;
-        stats.returnedRefugees += parseInt(record.returned_refugees as any) || 0;
-        stats.returnedIDPs += parseInt(record.returned_idps as any) || 0;
+        stats.returnedRefugees += record.returned_refugees || 0;
+        stats.returnedIDPs += record.returned_idps || 0;
         stats.asylumSeekers += record.asylum_seekers || 0;
-        stats.stateless += parseInt(record.stateless as any) || 0;
+        stats.stateless += record.stateless || 0;
         stats.ooc += record.ooc || 0;
       }
 
@@ -56,7 +56,7 @@ export async function GET(
       if (record.coa_iso === iso3) {
         stats.refugeesAsylum += record.refugees || 0;
         stats.asylumSeekers += record.asylum_seekers || 0;
-        stats.stateless += parseInt(record.stateless as any) || 0;
+        stats.stateless += record.stateless || 0;
         stats.ooc += record.ooc || 0;
       }
     });
@@ -76,7 +76,7 @@ export async function GET(
         globalStats.refugees = record.refugees || 0;
         globalStats.asylumSeekers = record.asylum_seekers || 0;
         globalStats.idps = record.idps || 0;
-        globalStats.stateless = parseInt(record.stateless as any) || 0;
+        globalStats.stateless = record.stateless || 0;
       }
     });
 

@@ -227,18 +227,16 @@ export async function getGlobalYearlyStats(year: number): Promise<{
         .toArray()
     ]);
     
-    const stats = summary[0] || {
-      totalCountries: 0,
-      totalPoliticalViolence: 0,
-      totalFatalities: 0,
-      totalCivilianFatalities: 0,
-      totalDemonstrations: 0,
-    };
+    const aggregatedStats = summary[0];
     
     return {
       year,
-      ...stats,
-      topCountries,
+      totalCountries: aggregatedStats?.totalCountries ?? 0,
+      totalPoliticalViolence: aggregatedStats?.totalPoliticalViolence ?? 0,
+      totalFatalities: aggregatedStats?.totalFatalities ?? 0,
+      totalCivilianFatalities: aggregatedStats?.totalCivilianFatalities ?? 0,
+      totalDemonstrations: aggregatedStats?.totalDemonstrations ?? 0,
+      topCountries: topCountries as ACLEDYearlyStats[],
     };
     
   } catch (error) {

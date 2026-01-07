@@ -15,7 +15,7 @@ export default function RegionDetailPanel({ region, onClose, charities = [] }: R
 
   // Filter charities active in this region
   const relevantCharities = charities.filter(charity => 
-    charity.focusAreas.some(area => region.issues.includes(area))
+    charity.focusAreas.some(area => region.issues.some(issue => issue.type === area))
   );
 
   return (
@@ -61,17 +61,17 @@ export default function RegionDetailPanel({ region, onClose, charities = [] }: R
             <div className="bg-gray-50 p-4 rounded-lg">
               <TrendingDown className="text-red-600 mb-2" size={24} />
               <p className="text-sm text-gray-600">Poverty Rate</p>
-              <p className="text-xl font-bold text-gray-800">{region.economicData.povertyRate.toFixed(1)}%</p>
+              <p className="text-xl font-bold text-gray-800">{region.povertyRate.toFixed(1)}%</p>
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
               <TrendingDown className="text-amber-600 mb-2" size={24} />
               <p className="text-sm text-gray-600">Unemployment Rate</p>
-              <p className="text-xl font-bold text-gray-800">{region.economicData.unemploymentRate.toFixed(1)}%</p>
+              <p className="text-xl font-bold text-gray-800">{region.unemploymentRate.toFixed(1)}%</p>
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
               <DollarSign className="text-green-600 mb-2" size={24} />
               <p className="text-sm text-gray-600">GDP Per Capita</p>
-              <p className="text-xl font-bold text-gray-800">{formatCurrency(region.economicData.gdpPerCapita)}</p>
+              <p className="text-xl font-bold text-gray-800">{formatCurrency(region.gdpPerCapita)}</p>
             </div>
           </div>
         </section>
@@ -85,9 +85,9 @@ export default function RegionDetailPanel({ region, onClose, charities = [] }: R
                 <span
                   key={index}
                   className="px-3 py-1 rounded-full text-white text-sm font-semibold"
-                  style={{ backgroundColor: getIssueColor(issue) }}
+                  style={{ backgroundColor: getIssueColor(issue.type) }}
                 >
-                  {issue}
+                  {issue.type}
                 </span>
               ))}
             </div>

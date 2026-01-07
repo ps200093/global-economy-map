@@ -5,10 +5,10 @@ import { CountryScore } from '@/types/country';
 
 export async function GET(
   request: Request,
-  { params }: { params: { iso3: string } }
+  { params }: { params: Promise<{ iso3: string }> }
 ) {
   try {
-    const { iso3 } = params;
+    const { iso3 } = await params;
 
     if (!iso3 || iso3.length !== 3) {
       return NextResponse.json(

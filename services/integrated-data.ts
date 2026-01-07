@@ -4,9 +4,7 @@ import {
   getMultipleIndicators, 
   WB_INDICATORS 
 } from './worldbank';
-import { getConflictData } from './acled';
 import { getRefugeeData } from './unhcr';
-import { getDisasterAlerts } from './gdacs';
 
 // 국가 코드 매핑 (지역 ID -> ISO3 코드)
 const COUNTRY_CODES: Record<string, string> = {
@@ -82,8 +80,8 @@ export async function getEnhancedRegionData(regionId: string): Promise<EnhancedR
     } : null;
 
     // 위기 데이터 수집 (대표 국가들에서)
-    const conflicts = [];
-    const disasters = [];
+    const conflicts: any[] = [];
+    const disasters: any[] = [];
     const refugeeStats = { origin: 0, asylum: 0, idps: 0 };
 
     // 병렬로 모든 데이터 수집 (속도 개선을 위해 1개 국가만)
@@ -215,16 +213,16 @@ export async function getAllEnhancedRegionData(): Promise<EnhancedRegionData[]> 
 function determineCategories(data: any): CrisisCategory[] {
   const categories: CrisisCategory[] = [];
 
-  if (data.conflicts.length > 0) categories.push('전쟁/분쟁');
+  if (data.conflicts.length > 0) categories.push('War/Conflict');
   
   // 영양부족률로 식량 안보 판단 (World Bank 데이터)
-  if (data.malnutritionRate && data.malnutritionRate >= 15) categories.push('기아/식량부족');
+  if (data.malnutritionRate && data.malnutritionRate >= 15) categories.push('Hunger/Food Shortage');
   
-  if (data.povertyRate && data.povertyRate > 20) categories.push('빈곤');
-  if (data.educationExpenditure && data.educationExpenditure < 4) categories.push('교육');
-  if (data.healthExpenditure && data.healthExpenditure < 5) categories.push('보건/의료');
-  if (data.refugeeStats && (data.refugeeStats.origin > 100000 || data.refugeeStats.idps > 100000)) categories.push('난민');
-  if (data.disasters.length > 0) categories.push('자연재해');
+  if (data.povertyRate && data.povertyRate > 20) categories.push('Poverty');
+  if (data.educationExpenditure && data.educationExpenditure < 4) categories.push('Education');
+  if (data.healthExpenditure && data.healthExpenditure < 5) categories.push('Health/Medical');
+  if (data.refugeeStats && (data.refugeeStats.origin > 100000 || data.refugeeStats.idps > 100000)) categories.push('Refugees');
+  if (data.disasters.length > 0) categories.push('Natural Disasters');
 
   return categories;
 }

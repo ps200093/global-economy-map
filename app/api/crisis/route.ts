@@ -1,14 +1,13 @@
 import { NextResponse } from 'next/server';
-import { getConflictData } from '@/services/acled';
+import { getConflictData } from '@/services/acled-db';
 import { getDisasterAlerts } from '@/services/gdacs';
-import { getFoodSecurityData } from '@/services/fews';
 import { getRefugeeData } from '@/services/unhcr';
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const country = searchParams.get('country');
-    const type = searchParams.get('type'); // conflict, disaster, food, refugee
+    const type = searchParams.get('type'); // conflict, disaster, refugee
 
     if (!country) {
       return NextResponse.json(
@@ -34,10 +33,6 @@ export async function GET(request: Request) {
 
     if (!type || type === 'disaster') {
       data.disasters = await getDisasterAlerts(country);
-    }
-
-    if (!type || type === 'food') {
-      data.foodSecurity = await getFoodSecurityData(country);
     }
 
     if (!type || type === 'refugee') {

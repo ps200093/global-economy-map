@@ -27,9 +27,15 @@ export interface UNHCRData {
   year: number;
   country_of_origin: string;
   country_of_asylum: string;
+  coo_iso?: string;
+  coa_iso?: string;
   refugees: number;
   asylum_seekers: number;
   idps: number;
+  returned_refugees?: number;
+  returned_idps?: number;
+  stateless?: number;
+  ooc?: number;
 }
 
 // FEWS NET data type
