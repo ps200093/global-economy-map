@@ -9,10 +9,18 @@
     "lint": "eslint",
     "test-mongo": "tsx scripts/testMongoDB.ts",
     "fetch-countries": "tsx scripts/fetchAllCountries.ts",
-    "analyze-data": "tsx scripts/analyzeData.ts"
+    "analyze-data": "tsx scripts/analyzeData.ts",
+    "migrate-acled": "tsx scripts/migrateACLED.ts",
+    "migrate-acled-stats": "tsx scripts/migrateACLEDStats.ts",
+    "check-acled": "tsx scripts/checkACLED.ts",
+    "clear-acled": "tsx scripts/clearACLED.ts",
+    "migrate-charities": "tsx scripts/migrateCharities.ts",
+    "migrate-to-english": "tsx scripts/migrateToEnglish.ts"
   },
   "dependencies": {
     "@types/leaflet": "^1.9.21",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.562.0",
     "mongodb": "^6.21.0",
@@ -22,6 +30,7 @@
     "react-leaflet": "^5.0.0",
     "react-leaflet-cluster": "^4.0.0",
     "recharts": "^3.6.0",
+    "tailwind-merge": "^3.4.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

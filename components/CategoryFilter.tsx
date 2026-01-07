@@ -12,25 +12,25 @@ interface CategoryFilterProps {
 }
 
 const CATEGORIES: CrisisCategory[] = [
-  '전쟁/분쟁',
-  '기아/식량부족',
-  '빈곤',
-  '교육',
-  '보건/의료',
-  '난민',
-  '자연재해',
-  '환경',
+  'War/Conflict',
+  'Hunger/Food Shortage',
+  'Poverty',
+  'Education',
+  'Health/Medical',
+  'Refugees',
+  'Natural Disasters',
+  'Environment',
 ];
 
 const CATEGORY_ICONS: Record<CrisisCategory, string> = {
-  '전쟁/분쟁': '⚔️',
-  '기아/식량부족': '🍞',
-  '빈곤': '💰',
-  '교육': '📚',
-  '보건/의료': '🏥',
-  '난민': '🏃',
-  '자연재해': '🌪️',
-  '환경': '🌱',
+  'War/Conflict': '⚔️',
+  'Hunger/Food Shortage': '🍞',
+  'Poverty': '💰',
+  'Education': '📚',
+  'Health/Medical': '🏥',
+  'Refugees': '🏃',
+  'Natural Disasters': '🌪️',
+  'Environment': '🌱',
 };
 
 export default function CategoryFilter({
@@ -47,7 +47,7 @@ export default function CategoryFilter({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Filter className="text-blue-600" size={24} />
-          <h3 className="text-xl font-bold text-gray-800">위기 카테고리 필터</h3>
+          <h3 className="text-xl font-bold text-gray-800">Crisis Category Filter</h3>
         </div>
         <div className="flex gap-2">
           <button
@@ -55,20 +55,20 @@ export default function CategoryFilter({
             disabled={allSelected}
             className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            전체 선택
+            Select All
           </button>
           <button
             onClick={onClearAll}
             disabled={noneSelected}
             className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            전체 해제
+            Clear All
           </button>
         </div>
       </div>
 
       <p className="text-sm text-gray-600 mb-4">
-        관심 있는 위기 유형을 선택하면 해당 지역이 지도에 강조 표시됩니다
+        Select crisis types of interest to highlight those regions on the map
       </p>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -111,8 +111,8 @@ export default function CategoryFilter({
       {selectedCategories.length > 0 && (
         <div className="mt-4 p-3 bg-blue-50 rounded-lg">
           <p className="text-sm text-blue-800">
-            <strong>{selectedCategories.length}개 카테고리</strong>가 선택되었습니다. 
-            지도에서 해당 위기가 발생한 지역을 확인하세요.
+            <strong>{selectedCategories.length} categories</strong> selected. 
+            View affected regions on the map.
           </p>
         </div>
       )}

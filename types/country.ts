@@ -1,57 +1,57 @@
-// MongoDB용 국가 데이터 스키마
+// MongoDB country data schema
 
 export interface CountryScore {
-  // 기본 정보
-  iso3: string; // ISO 3166-1 alpha-3 코드
-  name: string; // 영문 이름
-  nameKo: string; // 한글 이름
-  region: string; // 지역 (e.g., "Sub-Saharan Africa")
-  coordinates: [number, number]; // [위도, 경도]
+  // Basic information
+  iso3: string; // ISO 3166-1 alpha-3 code
+  name: string; // English name
+  nameKo: string; // Korean name
+  region: string; // Region (e.g., "Sub-Saharan Africa")
+  coordinates: [number, number]; // [latitude, longitude]
   
-  // 원본 지표 데이터
+  // Raw indicator data
   indicators: {
-    // 빈곤 지표
-    povertyRate?: number; // 빈곤율 (%)
-    giniIndex?: number; // 지니계수 (0-100)
+    // Poverty indicators
+    povertyRate?: number; // Poverty rate (%)
+    giniIndex?: number; // Gini coefficient (0-100)
     
-    // 경제 지표
-    gdpPerCapita?: number; // 1인당 GDP (USD)
-    unemploymentRate?: number; // 실업률 (%)
+    // Economic indicators
+    gdpPerCapita?: number; // GDP per capita (USD)
+    unemploymentRate?: number; // Unemployment rate (%)
     
-    // 보건/영양 지표
-    lifeExpectancy?: number; // 기대수명 (년)
-    malnutritionRate?: number; // 영양부족률 (%)
-    stuntingRate?: number; // 발육부진률 (%)
-    healthExpenditure?: number; // 보건 지출 (% of GDP)
+    // Health/Nutrition indicators
+    lifeExpectancy?: number; // Life expectancy (years)
+    malnutritionRate?: number; // Malnutrition rate (%)
+    stuntingRate?: number; // Stunting rate (%)
+    healthExpenditure?: number; // Health expenditure (% of GDP)
     
-    // 교육 지표
-    literacyRate?: number; // 문해율 (%)
-    educationExpenditure?: number; // 교육 지출 (% of GDP)
+    // Education indicators
+    literacyRate?: number; // Literacy rate (%)
+    educationExpenditure?: number; // Education expenditure (% of GDP)
     
-    // 식량 안보
-    foodProductionIndex?: number; // 식량 생산 지수
+    // Food security
+    foodProductionIndex?: number; // Food production index
     
-    // 인구
+    // Population
     population?: number;
   };
   
-  // 계산된 점수
+  // Calculated scores
   scores: {
-    poverty: number; // 빈곤 점수 (0-100)
-    economy: number; // 경제 점수 (0-100)
-    health: number; // 보건 점수 (0-100)
-    education: number; // 교육 점수 (0-100)
-    foodSecurity: number; // 식량 안보 점수 (0-100)
-    overall: number; // 종합 점수 (0-100, 가중 평균)
+    poverty: number; // Poverty score (0-100)
+    economy: number; // Economy score (0-100)
+    health: number; // Health score (0-100)
+    education: number; // Education score (0-100)
+    foodSecurity: number; // Food security score (0-100)
+    overall: number; // Overall score (0-100, weighted average)
   };
   
-  // 긴급도 레벨 (종합 점수 기반)
+  // Urgency level (based on overall score)
   urgencyLevel: 'critical' | 'high' | 'medium' | 'low' | 'stable';
   
-  // 마커 색상 (긴급도 기반)
+  // Marker color (based on urgency)
   markerColor: string; // hex color code
   
-  // 접근성 레벨 (UI 표시용)
+  // Access levels (for UI display)
   accessLevels: {
     education: 'Critical' | 'Low' | 'Medium' | 'High';
     water: 'Critical' | 'Low' | 'Medium' | 'High';
@@ -59,25 +59,27 @@ export interface CountryScore {
     foodSecurity: 'Critical' | 'Low' | 'Medium' | 'High';
   };
   
-  // 추천 지원 분야 (점수 기반 자동 계산)
+  // Recommended support areas (auto-calculated based on scores)
   recommendedSupport: string[];
   
-  // 추천 NGO
+  // Suggested NGOs
   suggestedNGOs?: {
     id: string;
     name: string;
     transparencyScore: number;
     focusArea?: string;
+    focusAreas?: string[];
     donationLink: string;
+    website?: string;
   }[];
   
-  // 데이터 메타
-  dataQuality: number; // 데이터 품질 점수 (0-100, 사용 가능한 지표 비율)
-  lastUpdated: Date; // 마지막 업데이트 시간
-  source: string; // 데이터 출처
+  // Data metadata
+  dataQuality: number; // Data quality score (0-100, ratio of available indicators)
+  lastUpdated: Date; // Last update time
+  source: string; // Data source
 }
 
-// 국가 목록 (ISO3 코드 + 좌표)
+// Country list (ISO3 code + coordinates)
 export interface CountryBasicInfo {
   iso3: string;
   name: string;
@@ -86,7 +88,7 @@ export interface CountryBasicInfo {
   coordinates: [number, number];
 }
 
-// 점수 계산 가중치
+// Score calculation weights
 export const SCORE_WEIGHTS = {
   poverty: 0.40, // 40%
   economy: 0.20, // 20%
@@ -95,13 +97,13 @@ export const SCORE_WEIGHTS = {
   foodSecurity: 0.10, // 10%
 } as const;
 
-// 긴급도 임계값
+// Urgency thresholds
 export const URGENCY_THRESHOLDS = {
-  critical: 90, // >= 90점
-  high: 70, // 70-89점
-  medium: 50, // 50-69점
-  low: 30, // 30-49점
-  stable: 0, // < 30점
+  critical: 90, // >= 90 points
+  high: 70, // 70-89 points
+  medium: 50, // 50-69 points
+  low: 30, // 30-49 points
+  stable: 0, // < 30 points
 } as const;
 
 // 마커 색상

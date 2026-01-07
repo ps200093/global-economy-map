@@ -1,6 +1,6 @@
 'use client';
 
-import { MapContainer, TileLayer, Popup, useMap, Marker, Tooltip } from 'react-leaflet';
+import { MapContainer, TileLayer, useMap, useMapEvents, Marker, Tooltip } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import { useEffect } from 'react';
 import L from 'leaflet';
@@ -13,11 +13,12 @@ interface WorldMapProps {
   countries?: CountryData[];
   onRegionClick?: (region: RegionData) => void;
   onCountryClick?: (country: CountryData) => void;
+  onMapClick?: () => void;
   selectedRegion?: RegionData | null;
   selectedCountry?: CountryData | null;
 }
 
-// 지도 중심 조정 컴포넌트
+// Map center adjustment component
 function MapController({ selectedRegion, selectedCountry }: { 
   selectedRegion?: RegionData | null;
   selectedCountry?: CountryData | null;
@@ -39,13 +40,28 @@ function MapController({ selectedRegion, selectedCountry }: {
   return null;
 }
 
-// 긴급도별 아이콘 생성
+// Map click handler component
+function MapClickHandler({ onMapClick }: { onMapClick?: () => void }) {
+  useMapEvents({
+    click: (e) => {
+      // Check if click is on a marker or cluster
+      const target = e.originalEvent?.target as HTMLElement;
+      if (target?.closest('.custom-marker') || target?.closest('.custom-cluster-icon')) {
+        return; // Don't trigger map click for marker/cluster clicks
+      }
+      onMapClick?.();
+    },
+  });
+  return null;
+}
+
+// Create icon by urgency level
 function createCustomIcon(urgencyLevel: 'critical' | 'high' | 'medium' | 'low' | 'stable') {
   const color = getUrgencyColor(urgencyLevel);
-  const size = urgencyLevel === 'critical' ? 26 : 
-               urgencyLevel === 'high' ? 24 : 
-               urgencyLevel === 'medium' ? 22 : 
-               urgencyLevel === 'low' ? 20 : 18;
+  const size = urgencyLevel === 'critical' ? 44 : 
+               urgencyLevel === 'high' ? 40 : 
+               urgencyLevel === 'medium' ? 36 : 
+               urgencyLevel === 'low' ? 32 : 28;
   
   return L.divIcon({
     className: 'custom-marker',
@@ -56,7 +72,7 @@ function createCustomIcon(urgencyLevel: 'critical' | 'high' | 'medium' | 'low' |
         height: ${size}px;
         border-radius: 50%;
         border: 3px solid white;
-        box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+        box-shadow: 0 3px 6px rgba(15, 23, 42, 0.4);
         position: relative;
         cursor: pointer;
         transition: transform 0.2s;
@@ -79,11 +95,11 @@ function createCustomIcon(urgencyLevel: 'critical' | 'high' | 'medium' | 'low' |
   });
 }
 
-// 커스텀 클러스터 아이콘 생성 함수
+// Custom cluster icon creation function
 const createClusterCustomIcon = (cluster: any) => {
   const childMarkers = cluster.getAllChildMarkers();
   
-  // 긴급도별 카운트
+  // Count by urgency level
   const urgencyCounts = {
     critical: 0,
     high: 0,
@@ -101,7 +117,7 @@ const createClusterCustomIcon = (cluster: any) => {
 
   const totalCount = childMarkers.length;
   
-  // 가장 높은 긴급도 결정
+  // Determine highest urgency level
   let dominantUrgency: 'critical' | 'high' | 'medium' | 'low' | 'stable' = 'stable';
   if (urgencyCounts.critical > 0) dominantUrgency = 'critical';
   else if (urgencyCounts.high > 0) dominantUrgency = 'high';
@@ -121,7 +137,7 @@ const createClusterCustomIcon = (cluster: any) => {
         align-items: center;
         justify-content: center;
         border: 3px solid white;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        box-shadow: 0 4px 8px rgba(15, 23, 42, 0.3);
         font-weight: bold;
         color: white;
         font-size: 14px;
@@ -133,10 +149,11 @@ const createClusterCustomIcon = (cluster: any) => {
         top: -80px;
         left: 50%;
         transform: translateX(-50%);
-        background: white;
+        background: #FFFFFF;
         padding: 8px 12px;
         border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        border: 1px solid #E2E8F0;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
         pointer-events: none;
         opacity: 0;
         transition: opacity 0.2s;
@@ -144,11 +161,11 @@ const createClusterCustomIcon = (cluster: any) => {
         font-size: 12px;
         z-index: 1000;
       ">
-        ${urgencyCounts.critical > 0 ? `<div style="color: #dc2626;">🔴 Critical: ${urgencyCounts.critical}</div>` : ''}
-        ${urgencyCounts.high > 0 ? `<div style="color: #ea580c;">🟠 High: ${urgencyCounts.high}</div>` : ''}
-        ${urgencyCounts.medium > 0 ? `<div style="color: #eab308;">🟡 Medium: ${urgencyCounts.medium}</div>` : ''}
-        ${urgencyCounts.low > 0 ? `<div style="color: #22c55e;">🟢 Low: ${urgencyCounts.low}</div>` : ''}
-        ${urgencyCounts.stable > 0 ? `<div style="color: #9ca3af;">⚪ Stable: ${urgencyCounts.stable}</div>` : ''}
+        ${urgencyCounts.critical > 0 ? `<div style="color: #B91C1C;">🔴 Critical: ${urgencyCounts.critical}</div>` : ''}
+        ${urgencyCounts.high > 0 ? `<div style="color: #EA580C;">🟠 High: ${urgencyCounts.high}</div>` : ''}
+        ${urgencyCounts.medium > 0 ? `<div style="color: #CA8A04;">🟡 Medium: ${urgencyCounts.medium}</div>` : ''}
+        ${urgencyCounts.low > 0 ? `<div style="color: #22C55E;">🟢 Low: ${urgencyCounts.low}</div>` : ''}
+        ${urgencyCounts.stable > 0 ? `<div style="color: #9CA3AF;">⚪ Stable: ${urgencyCounts.stable}</div>` : ''}
       </div>
     `,
     className: 'custom-cluster-icon',
@@ -161,16 +178,17 @@ export default function WorldMap({
   countries = [],
   onRegionClick, 
   onCountryClick,
+  onMapClick,
   selectedRegion,
   selectedCountry 
 }: WorldMapProps) {
-  // 태평양 섬나라들의 좌표 조정
-  const pacificIslands = ['KIR', 'TON', 'WSM']; // 키리바시, 통가, 사모아
+  // Pacific island countries coordinate adjustment
+  const pacificIslands = ['KIR', 'TON', 'WSM']; // Kiribati, Tonga, Samoa
   
   const adjustedCountries = countries.map(country => {
     const [lat, lng] = country.coordinates;
     
-    // 음수 경도인 태평양 섬나라들을 오른쪽으로 이동 (360도 더하기)
+    // Move Pacific island countries with negative longitude to the right (add 360 degrees)
     if (pacificIslands.includes(country.iso3) && lng < 0) {
       console.log(`Wrapping ${country.name} (${country.iso3}): ${lng} → ${lng + 360}`);
       return {
@@ -193,7 +211,7 @@ export default function WorldMap({
       worldCopyJump={false}
       maxBounds={[[-90, -180], [90, 540]]}
     >
-      {/* CartoDB Positron - 영어 레이블, 깔끔한 스타일 */}
+      {/* CartoDB Positron - English labels, clean style */}
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
@@ -203,8 +221,9 @@ export default function WorldMap({
         bounds={[[-90, -180], [90, 540]]}
       />
       <MapController selectedRegion={selectedRegion} selectedCountry={selectedCountry} />
+      <MapClickHandler onMapClick={onMapClick} />
       
-      {/* 마커 클러스터 그룹 */}
+        {/* Marker cluster group */}
       <MarkerClusterGroup
         chunkedLoading
         iconCreateFunction={createClusterCustomIcon}
@@ -213,78 +232,52 @@ export default function WorldMap({
         showCoverageOnHover={false}
         zoomToBoundsOnClick={true}
       >
-        {/* 국가 마커 */}
+        {/* Country markers */}
         {adjustedCountries.map((country) => (
           <Marker
             key={country.id}
             position={country.coordinates}
             icon={createCustomIcon(country.urgencyLevel)}
-            // @ts-ignore - 클러스터링을 위한 커스텀 속성
+            // @ts-ignore - Custom property for clustering
             urgencyLevel={country.urgencyLevel}
             eventHandlers={{
-              click: () => onCountryClick?.(country),
+              click: (e) => {
+                e.target.closeTooltip();
+                onCountryClick?.(country);
+              },
             }}
           >
-            {/* 호버 툴팁 */}
+            {/* Hover tooltip */}
             <Tooltip direction="top" offset={[0, -10]} opacity={0.95} permanent={false}>
               <div className="text-sm">
-                <div className="font-bold text-base mb-2">{country.nameKo || country.name}</div>
-                <div className="text-gray-700 space-y-1">
+                <div className="font-bold text-base mb-2 text-[#0F172A]">{country.name}</div>
+                <div className="text-[#475569] space-y-1">
                   <div className="flex justify-between gap-4">
-                    <span>빈곤율:</span>
-                    <span className="font-semibold">{(country.indicators?.poverty || 0).toFixed(1)}%</span>
+                    <span>Poverty Rate:</span>
+                    <span className="font-semibold text-[#B91C1C]">{(country.indicators?.poverty || 0).toFixed(1)}%</span>
                   </div>
                   <div className="flex justify-between gap-4">
                     <span>GDP:</span>
-                    <span className="font-semibold">{formatCurrency(country.gdpPerCapita || 0)}</span>
+                    <span className="font-semibold text-[#2563EB]">{formatCurrency(country.gdpPerCapita || 0)}</span>
                   </div>
                   <div className="flex justify-between gap-4">
-                    <span>인구:</span>
-                    <span className="font-semibold">{formatNumber(country.population || 0)}</span>
+                    <span>Population:</span>
+                    <span className="font-semibold text-[#0F172A]">{formatNumber(country.population || 0)}</span>
                   </div>
-                  <div className="mt-2 pt-2 border-t border-gray-300">
+                  <div className="mt-2 pt-2 border-t border-[#E2E8F0]">
                     <span 
                       className="px-2 py-1 rounded text-white text-xs font-semibold"
                       style={{ backgroundColor: getUrgencyColor(country.urgencyLevel) }}
                     >
-                      {country.urgencyLevel === 'critical' ? '🔴 매우 긴급' : 
-                       country.urgencyLevel === 'high' ? '🟠 긴급' : 
-                       country.urgencyLevel === 'medium' ? '🟡 주의' : 
-                       country.urgencyLevel === 'low' ? '🟢 낮음' : '⚪ 안정'}
+                      {country.urgencyLevel === 'critical' ? '🔴 Critical' : 
+                       country.urgencyLevel === 'high' ? '🟠 High' : 
+                       country.urgencyLevel === 'medium' ? '🟡 Caution' : 
+                       country.urgencyLevel === 'low' ? '🟢 Low' : '⚪ Stable'}
                     </span>
                   </div>
                 </div>
               </div>
             </Tooltip>
-
-            {/* 클릭 시 팝업 */}
-            <Popup>
-              <div className="p-3 min-w-[200px]">
-                <h3 className="font-bold text-lg mb-2">{country.nameKo || country.name}</h3>
-                <div className="space-y-1 text-sm">
-                  <p><strong>인구:</strong> {formatNumber(country.population || 0)}</p>
-                  <p><strong>빈곤율:</strong> {(country.indicators?.poverty || 0).toFixed(1)}%</p>
-                  <p><strong>1인당 GDP:</strong> {formatCurrency(country.gdpPerCapita || 0)}</p>
-                  <p className="mt-2">
-                    <span 
-                      className="px-2 py-1 rounded text-white text-xs font-semibold"
-                      style={{ backgroundColor: getUrgencyColor(country.urgencyLevel) }}
-                    >
-                      {country.urgencyLevel === 'critical' ? '매우 긴급' : 
-                       country.urgencyLevel === 'high' ? '긴급' : 
-                       country.urgencyLevel === 'medium' ? '주의' : 
-                       country.urgencyLevel === 'low' ? '낮음' : '안정'}
-                    </span>
-                  </p>
-                  <button 
-                    className="mt-3 w-full bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 text-sm font-semibold"
-                    onClick={() => onCountryClick?.(country)}
-                  >
-                    상세 정보 보기
-                  </button>
-                </div>
-              </div>
-            </Popup>
           </Marker>
         ))}
       </MarkerClusterGroup>

@@ -1,14 +1,14 @@
-// 경제 이슈 타입
+// Economic issue type
 export type EconomicIssueType = 
-  | '빈곤' 
-  | '실업' 
-  | '식량 부족' 
-  | '교육' 
-  | '보건' 
-  | '인프라' 
-  | '환경';
+  | 'Poverty' 
+  | 'Unemployment' 
+  | 'Food Shortage' 
+  | 'Education' 
+  | 'Health' 
+  | 'Infrastructure' 
+  | 'Environment';
 
-// 지원 분야 타입
+// Support area type
 export type SupportAreaType = 
   | 'Clean Water Infrastructure'
   | 'Education Programs'
@@ -17,21 +17,21 @@ export type SupportAreaType =
   | 'Economic Development'
   | 'Emergency Relief';
 
-// 접근성 레벨
+// Access level
 export type AccessLevel = 'High' | 'Medium' | 'Low' | 'Critical';
 
-// 국가 데이터 (새 구조)
+// Country data (new structure)
 export interface CountryData {
   id: string;
   name: string;
-  nameKo: string; // 한국어 이름
-  iso3: string; // ISO 3166-1 alpha-3 코드
-  coordinates: [number, number]; // [위도, 경도]
+  nameKo: string; // Korean name
+  iso3: string; // ISO 3166-1 alpha-3 code
+  coordinates: [number, number]; // [latitude, longitude]
   
-  // 주요 지표 - CountryScore의 indicators와 호환
+  // Key indicators - compatible with CountryScore indicators
   indicators: {
-    poverty?: number; // 빈곤율 (%) - povertyRate에서 변환됨
-    povertyRate?: number; // MongoDB의 원본 필드명
+    poverty?: number; // Poverty rate (%) - converted from povertyRate
+    povertyRate?: number; // Original field name from MongoDB
     giniIndex?: number;
     gdpPerCapita?: number;
     unemploymentRate?: number;
@@ -43,51 +43,63 @@ export interface CountryData {
     educationExpenditure?: number;
     foodProductionIndex?: number;
     population?: number;
-    // UI 표시용 (선택적)
+    // For UI display (optional)
     educationAccess?: AccessLevel;
     waterStability?: AccessLevel;
     healthcareAccess?: AccessLevel;
     foodSecurity?: AccessLevel;
   };
   
-  // 추천 지원 분야
+  // Calculated scores (optional - from CountryScore)
+  scores?: {
+    poverty: number;
+    economy: number;
+    health: number;
+    education: number;
+    foodSecurity: number;
+    overall: number;
+  };
+  
+  // Recommended support areas
   recommendedSupport: SupportAreaType[] | string[];
   
-  // 추천 NGO
+  // Suggested NGOs
   suggestedNGOs?: {
     id: string;
     name: string;
     transparencyScore: number;
     focusArea?: SupportAreaType;
+    focusAreas?: string[];
     donationLink: string;
+    website?: string;
   }[];
   
-  // 긴급도
+  // Urgency level
   urgencyLevel: 'critical' | 'high' | 'medium' | 'low' | 'stable';
   
-  // 인구
+  // Population
   population: number;
   
-  // 기타 경제 지표
+  // Other economic indicators
   gdpPerCapita?: number;
   unemploymentRate?: number;
 }
 
-// 지역 경제 데이터 (기존 - 지역별 집계용)
+// Regional economic data (legacy - for regional aggregation)
 export interface RegionData {
   id: string;
   name: string;
   coordinates: [number, number];
   country: string;
   population: number;
-  povertyRate: number; // 빈곤율 (%)
-  unemploymentRate: number; // 실업률 (%)
-  gdpPerCapita: number; // 1인당 GDP (USD)
+  povertyRate: number; // Poverty rate (%)
+  unemploymentRate: number; // Unemployment rate (%)
+  gdpPerCapita: number; // GDP per capita (USD)
   issues: EconomicIssue[];
   urgencyLevel: 'critical' | 'high' | 'medium' | 'low';
 }
 
-// 경제 이슈 상세
+// Economic issue details
 export interface EconomicIssue {
   type: EconomicIssueType;
   severity: number; // 1-10
@@ -96,7 +108,7 @@ export interface EconomicIssue {
   fundingNeeded: number; // USD
 }
 
-// 기부 단체 정보
+// Charity organization info
 export interface CharityOrganization {
   id: string;
   name: string;
@@ -106,7 +118,7 @@ export interface CharityOrganization {
   focusAreas: EconomicIssueType[];
   website: string;
   donationLink: string;
-  regions: string[]; // 활동 지역 ID
+  regions: string[]; // Active region IDs
   totalDonations: number; // USD
   impactMetrics: {
     peopleBenefited: number;
@@ -115,7 +127,7 @@ export interface CharityOrganization {
   certifications: string[];
 }
 
-// 통계 데이터
+// Statistics data
 export interface GlobalStats {
   totalPopulationInPoverty: number;
   averagePovertyRate: number;

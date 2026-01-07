@@ -1,4 +1,4 @@
-// World Bank API 데이터 타입
+// World Bank API data type
 export interface WorldBankIndicator {
   country: { id: string; value: string };
   countryiso3code: string;
@@ -7,7 +7,7 @@ export interface WorldBankIndicator {
   indicator: { id: string; value: string };
 }
 
-// ACLED 데이터 타입
+// ACLED data type
 export interface ACLEDEvent {
   event_id_cnty: string;
   event_date: string;
@@ -22,7 +22,7 @@ export interface ACLEDEvent {
   notes: string;
 }
 
-// UNHCR 데이터 타입
+// UNHCR data type
 export interface UNHCRData {
   year: number;
   country_of_origin: string;
@@ -32,7 +32,7 @@ export interface UNHCRData {
   idps: number;
 }
 
-// FEWS NET 데이터 타입
+// FEWS NET data type
 export interface FEWSData {
   country: string;
   region: string;
@@ -41,23 +41,23 @@ export interface FEWSData {
   projected_period: string;
 }
 
-// FEWS NET 시장 가격 데이터
+// FEWS NET market price data
 export interface FEWSMarketPrice {
   country: string;
   market: string;
-  commodity: string; // 쌀, 밀, 옥수수, 콩 등
+  commodity: string; // rice, wheat, corn, beans, etc.
   currency: string;
   price: number;
   unit: string; // kg, lb, etc.
   date: string;
-  price_change_percentage: number; // 전월 대비 변화율
+  price_change_percentage: number; // month-over-month change rate
 }
 
-// FEWS NET 작황 상태
+// FEWS NET crop condition
 export interface FEWSCropCondition {
   country: string;
   region: string;
-  crop_type: string; // 쌀, 밀, 옥수수 등
+  crop_type: string; // rice, wheat, corn, etc.
   condition: 'excellent' | 'good' | 'fair' | 'poor' | 'failed';
   season: string;
   yield_estimate: number | null; // tons per hectare
@@ -66,7 +66,7 @@ export interface FEWSCropCondition {
   date: string;
 }
 
-// FEWS NET 교역 및 공급 흐름
+// FEWS NET trade and supply flow
 export interface FEWSTradeFlow {
   origin_country: string;
   destination_country: string;
@@ -76,10 +76,10 @@ export interface FEWSTradeFlow {
   border_point: string;
   date: string;
   flow_status: 'normal' | 'restricted' | 'blocked';
-  price_differential: number; // 가격 차이 (%)
+  price_differential: number; // price difference (%)
 }
 
-// GDACS 재난 데이터 타입
+// GDACS disaster data type
 export interface GDACSAlert {
   eventid: string;
   eventtype: string;
@@ -91,14 +91,14 @@ export interface GDACSAlert {
   vulnerability: number;
 }
 
-// 통합된 지역 데이터 타입
+// Enhanced regional data type
 export interface EnhancedRegionData {
   id: string;
   name: string;
   country: string;
   coordinates: [number, number];
   
-  // 경제 지표
+  // Economic indicators
   economy: {
     gdpPerCapita: number | null;
     gdpGrowth: number | null;
@@ -107,7 +107,7 @@ export interface EnhancedRegionData {
     giniIndex: number | null;
   };
   
-  // 사회 지표
+  // Social indicators
   social: {
     population: number | null;
     lifeExpectancy: number | null;
@@ -115,14 +115,14 @@ export interface EnhancedRegionData {
     urbanPopulation: number | null;
   };
   
-  // 교육 지표
+  // Education indicators
   education: {
     expenditureGDPPercent: number | null;
     primaryEnrollment: number | null;
     secondaryEnrollment: number | null;
   };
   
-  // 보건 지표
+  // Health indicators
   health: {
     healthExpenditureGDPPercent: number | null;
     physiciansPer1000: number | null;
@@ -130,7 +130,7 @@ export interface EnhancedRegionData {
     maternalMortalityRate: number | null;
   };
   
-  // 위기 상황
+  // Crisis situations
   crises: {
     conflicts: ACLEDEvent[];
     disasters: GDACSAlert[];
@@ -142,7 +142,7 @@ export interface EnhancedRegionData {
     };
   };
   
-  // 카테고리 (필터링용)
+  // Categories (for filtering)
   categories: CrisisCategory[];
   urgencyLevel: 'critical' | 'high' | 'medium' | 'low';
   
@@ -150,16 +150,16 @@ export interface EnhancedRegionData {
 }
 
 export type CrisisCategory = 
-  | '전쟁/분쟁' 
-  | '기아/식량부족' 
-  | '빈곤' 
-  | '교육' 
-  | '보건/의료'
-  | '난민'
-  | '자연재해'
-  | '환경';
+  | 'War/Conflict' 
+  | 'Hunger/Food Shortage' 
+  | 'Poverty' 
+  | 'Education' 
+  | 'Health/Medical'
+  | 'Refugees'
+  | 'Natural Disasters'
+  | 'Environment';
 
-// 기부 단체 재무 분석 타입
+// Charity financial analysis type
 export interface CharityFinancials {
   ein: string; // Employer Identification Number
   name: string;
@@ -184,40 +184,42 @@ export interface CharityFinancials {
     net: number;
   };
   
-  // 효율성 지표
+  // Efficiency metrics
   metrics: {
-    programExpenseRatio: number; // 프로그램비 비율
-    administrativeExpenseRatio: number; // 관리비 비율
-    fundraisingExpenseRatio: number; // 모금비 비율
-    workingCapitalRatio: number; // 운영자본 비율
-    revenueGrowth: number; // 전년 대비 수익 성장률
+    programExpenseRatio: number; // Program expense ratio
+    administrativeExpenseRatio: number; // Administrative expense ratio
+    fundraisingExpenseRatio: number; // Fundraising expense ratio
+    operatingExpenseRatio: number; // Operating efficiency: expense/revenue ratio
+    workingCapitalRatio: number; // Working capital ratio
+    revenueGrowth: number; // Year-over-year revenue growth
+    expenseGrowth: number; // Year-over-year expense growth
   };
 }
 
 export interface EnhancedCharityOrganization {
   id: string;
-  ein?: string; // IRS EIN (미국 단체만)
+  ein?: string; // IRS EIN (US organizations only)
   name: string;
   description: string;
   
-  // 기존 필드
+  // Core fields
   transparencyScore: number;
   rating: number;
   focusAreas: CrisisCategory[];
   website: string;
   donationLink: string;
   
-  // 활동 지역 (좌표 포함)
+  // Active regions (with coordinates)
   regions: {
     id: string;
     name: string;
     coordinates: [number, number];
   }[];
   
-  // 재무 정보
+  // Financial information
   financials?: CharityFinancials;
   
-  // 영향력
+  // Impact metrics
   impactMetrics: {
     peopleBenefited: number;
     projectsCompleted: number;

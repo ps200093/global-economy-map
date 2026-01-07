@@ -9,14 +9,14 @@ interface RegionChartsProps {
 }
 
 export default function RegionCharts({ regions }: RegionChartsProps) {
-  // 빈곤율 비교 데이터
+  // Poverty rate comparison data
   const povertyData = regions.map(r => ({
     name: r.name.length > 15 ? r.name.substring(0, 15) + '...' : r.name,
-    빈곤율: r.povertyRate,
-    실업률: r.unemploymentRate,
+    PovertyRate: r.povertyRate,
+    UnemploymentRate: r.unemploymentRate,
   }));
 
-  // 이슈 타입별 집계
+  // Aggregate by issue type
   const issueTypeData: { [key: string]: number } = {};
   regions.forEach(region => {
     region.issues.forEach(issue => {
@@ -35,9 +35,9 @@ export default function RegionCharts({ regions }: RegionChartsProps) {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-      {/* 빈곤율 및 실업률 비교 */}
+      {/* Poverty Rate and Unemployment Rate Comparison */}
       <div className="bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-lg font-bold mb-4 text-gray-800">지역별 빈곤율 & 실업률 비교</h3>
+        <h3 className="text-lg font-bold mb-4 text-gray-800">Regional Poverty & Unemployment Comparison</h3>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={povertyData}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -45,15 +45,15 @@ export default function RegionCharts({ regions }: RegionChartsProps) {
             <YAxis label={{ value: '(%)', angle: -90, position: 'insideLeft' }} />
             <Tooltip />
             <Legend />
-            <Bar dataKey="빈곤율" fill="#dc2626" />
-            <Bar dataKey="실업률" fill="#f59e0b" />
+            <Bar dataKey="PovertyRate" fill="#dc2626" />
+            <Bar dataKey="UnemploymentRate" fill="#f59e0b" />
           </BarChart>
         </ResponsiveContainer>
       </div>
 
-      {/* 이슈 타입별 영향 인구 */}
+      {/* Affected Population by Issue Type */}
       <div className="bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-lg font-bold mb-4 text-gray-800">경제 이슈별 영향 인구</h3>
+        <h3 className="text-lg font-bold mb-4 text-gray-800">Affected Population by Economic Issue</h3>
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
             <Pie
@@ -70,7 +70,7 @@ export default function RegionCharts({ regions }: RegionChartsProps) {
                 <Cell key={`cell-${index}`} fill={getIssueColor(entry.name)} />
               ))}
             </Pie>
-            <Tooltip formatter={(value: number) => `${(value / 1000000).toFixed(1)}M 명`} />
+            <Tooltip formatter={(value: number) => `${(value / 1000000).toFixed(1)}M people`} />
           </PieChart>
         </ResponsiveContainer>
       </div>

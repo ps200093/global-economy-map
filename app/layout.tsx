@@ -1,23 +1,34 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
+import type React from "react"
+import "./globals.css"
+import { Inter } from "next/font/google"
+import type { Metadata } from "next"
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Global Economy Monitor - 세계 경제 이슈와 기부 가이드",
-  description: "전 세계의 경제적 이슈와 빈곤 문제를 시각화하고, 신뢰할 수 있는 기부 단체를 소개하는 인터랙티브 플랫폼입니다.",
-  keywords: ["경제", "빈곤", "기부", "세계 지도", "데이터 시각화", "NGO"],
-};
+  title: "Global Economy Monitor - World Economic Issues and Donation Guide",
+  description: "An interactive platform visualizing global economic issues and poverty, featuring trusted charitable organizations.",
+  keywords: ["economy", "poverty", "donation", "world map", "data visualization", "NGO"],
+}
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="ko">
-      <body className={inter.className}>{children}</body>
+    <html lang="en">
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossOrigin=""
+        />
+      </head>
+      <body className={inter.className}>
+        {children}
+      </body>
     </html>
-  );
+  )
 }

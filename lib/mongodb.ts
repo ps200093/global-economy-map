@@ -1,7 +1,7 @@
 // MongoDB 연결 설정
 import { MongoClient, Db } from 'mongodb';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://mongo:OMqzVFckznCKpiTmJXAdbasmfSPHxoHm@caboose.proxy.rlwy.net:15340';
 const MONGODB_DB = process.env.MONGODB_DB || 'economy';
 
 if (!MONGODB_URI) {

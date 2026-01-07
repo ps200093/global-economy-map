@@ -21,7 +21,7 @@ export default function CharitySidebar({
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'rating' | 'transparency' | 'impact'>('rating');
 
-  // 필터링
+  // Filtering
   const filteredCharities = charities.filter((charity) => {
     const matchesSearch =
       charity.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -34,7 +34,7 @@ export default function CharitySidebar({
     return matchesSearch && matchesCategory;
   });
 
-  // 정렬
+  // Sorting
   const sortedCharities = [...filteredCharities].sort((a, b) => {
     switch (sortBy) {
       case 'rating':
@@ -50,45 +50,45 @@ export default function CharitySidebar({
 
   return (
     <div className="h-full flex flex-col bg-white shadow-lg rounded-lg overflow-hidden">
-      {/* 헤더 */}
+      {/* Header */}
       <div className="p-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <h2 className="text-xl font-bold mb-2">기부 단체</h2>
+        <h2 className="text-xl font-bold mb-2">Charity Organizations</h2>
         <p className="text-sm text-blue-100">
-          {sortedCharities.length}개의 신뢰할 수 있는 단체
+          {sortedCharities.length} trusted organizations
         </p>
       </div>
 
-      {/* 검색 및 정렬 */}
+      {/* Search and Sort */}
       <div className="p-4 border-b space-y-3">
-        {/* 검색 */}
+        {/* Search */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
           <input
             type="text"
-            placeholder="단체명 검색..."
+            placeholder="Search organization..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
           />
         </div>
 
-        {/* 정렬 */}
+        {/* Sort */}
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
         >
-          <option value="rating">평점 높은 순</option>
-          <option value="transparency">투명성 높은 순</option>
-          <option value="impact">영향력 큰 순</option>
+          <option value="rating">Highest Rating</option>
+          <option value="transparency">Highest Transparency</option>
+          <option value="impact">Highest Impact</option>
         </select>
       </div>
 
-      {/* 기부 단체 목록 */}
+      {/* Charity List */}
       <div className="flex-1 overflow-y-auto">
         {sortedCharities.length === 0 ? (
           <div className="p-8 text-center text-gray-500">
-            <p>검색 결과가 없습니다</p>
+            <p>No search results</p>
           </div>
         ) : (
           <div className="divide-y">
@@ -107,7 +107,7 @@ export default function CharitySidebar({
   );
 }
 
-// 기부 단체 아이템 컴포넌트
+// Charity item component
 function CharityItem({
   charity,
   isSelected,
@@ -132,7 +132,7 @@ function CharityItem({
         />
       </div>
 
-      {/* 평점 및 투명성 */}
+      {/* Rating and Transparency */}
       <div className="flex items-center gap-3 mb-2">
         <div className="flex items-center gap-1">
           <span className="text-yellow-500 text-xs">{getRatingStars(charity.rating)}</span>
@@ -149,7 +149,7 @@ function CharityItem({
         </div>
       </div>
 
-      {/* 활동 분야 */}
+      {/* Focus Areas */}
       <div className="flex flex-wrap gap-1 mb-2">
         {charity.focusAreas.slice(0, 2).map((area, idx) => (
           <span
@@ -167,28 +167,28 @@ function CharityItem({
         )}
       </div>
 
-      {/* 활동 지역 */}
+      {/* Active Regions */}
       <div className="flex items-center gap-1 text-xs text-gray-600">
         <MapPin size={12} />
-        <span>{charity.regions.length}개 지역에서 활동</span>
+        <span>Active in {charity.regions.length} regions</span>
       </div>
 
-      {/* 확장된 정보 (선택시) */}
+      {/* Expanded Info (when selected) */}
       {isSelected && (
         <div className="mt-3 pt-3 border-t space-y-2">
           <p className="text-xs text-gray-700">{charity.description}</p>
           
           <div className="grid grid-cols-2 gap-2 text-xs">
             <div className="bg-blue-50 p-2 rounded">
-              <p className="text-gray-600">지원한 사람</p>
+              <p className="text-gray-600">People Helped</p>
               <p className="font-bold text-blue-700">
                 {(charity.impactMetrics.peopleBenefited / 1000000).toFixed(1)}M
               </p>
             </div>
             <div className="bg-green-50 p-2 rounded">
-              <p className="text-gray-600">활동 국가</p>
+              <p className="text-gray-600">Active Countries</p>
               <p className="font-bold text-green-700">
-                {charity.impactMetrics.countriesActive}개국
+                {charity.impactMetrics.countriesActive} countries
               </p>
             </div>
           </div>
@@ -201,7 +201,7 @@ function CharityItem({
               className="flex-1 bg-blue-600 text-white text-center py-2 rounded-lg hover:bg-blue-700 transition-colors text-xs font-semibold flex items-center justify-center gap-1"
               onClick={(e) => e.stopPropagation()}
             >
-              기부하기 <ExternalLink size={12} />
+              Donate <ExternalLink size={12} />
             </a>
             <a
               href={charity.website}
@@ -210,7 +210,7 @@ function CharityItem({
               className="px-3 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors text-xs font-semibold"
               onClick={(e) => e.stopPropagation()}
             >
-              더보기
+              More
             </a>
           </div>
         </div>

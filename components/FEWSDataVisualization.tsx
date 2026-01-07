@@ -17,7 +17,7 @@ export default function FEWSDataVisualization({
   tradeFlows,
   country,
 }: FEWSDataVisualizationProps) {
-  // 가격 변화율 데이터 준비
+  // Prepare price change data
   const priceChangeData = marketPrices.map(p => ({
     commodity: p.commodity,
     change: p.price_change_percentage,
@@ -26,18 +26,18 @@ export default function FEWSDataVisualization({
 
   return (
     <div className="space-y-6">
-      {/* 시장 가격 섹션 */}
+      {/* Market Price Section */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <h3 className="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
           <TrendingUp className="text-blue-600" size={24} />
-          시장 가격 동향
+          Market Price Trends
         </h3>
 
         {marketPrices.length === 0 ? (
-          <p className="text-gray-500 text-center py-4">시장 가격 데이터가 없습니다</p>
+          <p className="text-gray-500 text-center py-4">No market price data available</p>
         ) : (
           <>
-            {/* 가격 변화율 차트 */}
+            {/* Price Change Chart */}
             <div className="mb-6">
               <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={priceChangeData}>
@@ -49,9 +49,9 @@ export default function FEWSDataVisualization({
                     height={100}
                     fontSize={12}
                   />
-                  <YAxis label={{ value: '변화율 (%)', angle: -90, position: 'insideLeft' }} />
+                  <YAxis label={{ value: 'Change (%)', angle: -90, position: 'insideLeft' }} />
                   <Tooltip 
-                    formatter={(value: number) => [`${value.toFixed(1)}%`, '가격 변화']}
+                    formatter={(value) => [typeof value === 'number' ? `${value.toFixed(1)}%` : value, 'Price Change']}
                   />
                   <Bar 
                     dataKey="change" 
@@ -62,7 +62,7 @@ export default function FEWSDataVisualization({
               </ResponsiveContainer>
             </div>
 
-            {/* 가격 상세 정보 */}
+            {/* Price Details */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {marketPrices.map((price, idx) => (
                 <MarketPriceCard key={idx} price={price} />
@@ -72,15 +72,15 @@ export default function FEWSDataVisualization({
         )}
       </div>
 
-      {/* 작황 상태 섹션 */}
+      {/* Crop Condition Section */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <h3 className="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
           <CheckCircle className="text-green-600" size={24} />
-          작황 및 농업 지표
+          Crop and Agricultural Indicators
         </h3>
 
         {cropConditions.length === 0 ? (
-          <p className="text-gray-500 text-center py-4">작황 데이터가 없습니다</p>
+          <p className="text-gray-500 text-center py-4">No crop data available</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {cropConditions.map((crop, idx) => (
@@ -90,15 +90,15 @@ export default function FEWSDataVisualization({
         )}
       </div>
 
-      {/* 교역 흐름 섹션 */}
+      {/* Trade Flow Section */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <h3 className="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
           <MapPin className="text-purple-600" size={24} />
-          교역 및 공급 흐름
+          Trade and Supply Flow
         </h3>
 
         {tradeFlows.length === 0 ? (
-          <p className="text-gray-500 text-center py-4">교역 데이터가 없습니다</p>
+          <p className="text-gray-500 text-center py-4">No trade data available</p>
         ) : (
           <div className="space-y-4">
             {tradeFlows.map((flow, idx) => (
@@ -111,7 +111,7 @@ export default function FEWSDataVisualization({
   );
 }
 
-// 시장 가격 카드
+// Market price card
 function MarketPriceCard({ price }: { price: FEWSMarketPrice }) {
   const isIncreasing = price.price_change_percentage > 0;
   const isSignificant = Math.abs(price.price_change_percentage) > 10;
@@ -148,14 +148,14 @@ function MarketPriceCard({ price }: { price: FEWSMarketPrice }) {
       {isSignificant && isIncreasing && (
         <div className="mt-2 flex items-center gap-1 text-xs text-red-700">
           <AlertTriangle size={12} />
-          <span>가격 급등 경고</span>
+          <span>Price Surge Alert</span>
         </div>
       )}
     </div>
   );
 }
 
-// 작황 상태 카드
+// Crop condition card
 function CropConditionCard({ crop }: { crop: FEWSCropCondition }) {
   const conditionColors = {
     excellent: 'bg-green-100 text-green-800 border-green-300',
@@ -186,19 +186,19 @@ function CropConditionCard({ crop }: { crop: FEWSCropCondition }) {
 
       <div className="space-y-2 text-sm">
         <div className="flex justify-between">
-          <span className="text-gray-600">상태:</span>
+          <span className="text-gray-600">Status:</span>
           <span className="font-semibold capitalize">{crop.condition}</span>
         </div>
 
         {crop.yield_estimate && (
           <div className="flex justify-between">
-            <span className="text-gray-600">예상 수확량:</span>
+            <span className="text-gray-600">Expected Yield:</span>
             <span className="font-semibold">{crop.yield_estimate} t/ha</span>
           </div>
         )}
 
         <div className="flex justify-between items-center">
-          <span className="text-gray-600">강수량:</span>
+          <span className="text-gray-600">Rainfall:</span>
           <span className="flex items-center gap-1">
             {rainfallIcons[crop.rainfall_status]}
             <span className="text-xs capitalize">{crop.rainfall_status.replace('_', ' ')}</span>
@@ -206,7 +206,7 @@ function CropConditionCard({ crop }: { crop: FEWSCropCondition }) {
         </div>
 
         <div className="flex justify-between items-center">
-          <span className="text-gray-600">토양 수분:</span>
+          <span className="text-gray-600">Soil Moisture:</span>
           <span className="flex items-center gap-1">
             {soilIcons[crop.soil_moisture]}
             <span className="text-xs capitalize">{crop.soil_moisture}</span>
@@ -221,7 +221,7 @@ function CropConditionCard({ crop }: { crop: FEWSCropCondition }) {
   );
 }
 
-// 교역 흐름 카드
+// Trade flow card
 function TradeFlowCard({ flow }: { flow: FEWSTradeFlow }) {
   const statusColors = {
     normal: 'bg-green-100 text-green-800',
@@ -253,11 +253,11 @@ function TradeFlowCard({ flow }: { flow: FEWSTradeFlow }) {
 
       <div className="grid grid-cols-2 gap-4 text-sm">
         <div>
-          <p className="text-gray-600">물량:</p>
+          <p className="text-gray-600">Volume:</p>
           <p className="font-semibold">{flow.quantity.toLocaleString()} MT</p>
         </div>
         <div>
-          <p className="text-gray-600">가격 차이:</p>
+          <p className="text-gray-600">Price Differential:</p>
           <p className="font-semibold text-blue-700">{flow.price_differential.toFixed(1)}%</p>
         </div>
       </div>
@@ -267,7 +267,7 @@ function TradeFlowCard({ flow }: { flow: FEWSTradeFlow }) {
           <MapPin size={12} />
           <span>{flow.trade_route}</span>
         </div>
-        <p className="text-xs text-gray-500 mt-1">국경: {flow.border_point}</p>
+        <p className="text-xs text-gray-500 mt-1">Border: {flow.border_point}</p>
       </div>
     </div>
   );

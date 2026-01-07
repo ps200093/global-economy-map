@@ -6,10 +6,14 @@ const BASE_URL = 'https://api.unhcr.org/population/v1';
 
 /**
  * UNHCR API에서 난민 데이터를 가져옵니다
+ * @param countryCode - ISO3 국가 코드 (예: GHA, SYR)
+ * @param year - 연도 (기본값: 최신 연도)
+ * @param type - 'origin' (출신) 또는 'asylum' (수용) (기본값: 둘 다)
  */
 export async function getRefugeeData(
   countryCode?: string,
-  year?: number
+  year?: number,
+  type?: 'origin' | 'asylum'
 ): Promise<UNHCRData[]> {
   // 최신 연도를 먼저 가져옵니다
   let targetYear = year;
@@ -17,7 +21,6 @@ export async function getRefugeeData(
   if (!targetYear) {
     try {
       console.log('Fetching latest year from UNHCR years endpoint...');
-      // years 엔드포인트로 최신 연도 확인 (역순 정렬 추가)
       const yearsResponse = await fetch(`${BASE_URL}/years/`, {
         headers: {
           'Accept': 'application/json',
@@ -32,9 +35,9 @@ export async function getRefugeeData(
         console.log('Years data:', JSON.stringify(yearsData).substring(0, 300));
         
         if (yearsData.items && yearsData.items.length > 0) {
-          // 연도 배열을 내림차순 정렬하여 최신 연도 가져오기
           const years = yearsData.items.map((item: any) => item.year).sort((a: number, b: number) => b - a);
-          targetYear = years[0];
+          // 2023년을 기본으로 사용 (2024, 2025는 데이터가 불완전할 수 있음)
+          targetYear = years.find((y: number) => y <= 2023) || years[0];
           console.log('Latest year from API:', targetYear);
         }
       }
@@ -42,9 +45,9 @@ export async function getRefugeeData(
       console.error('Error fetching latest year:', error);
     }
     
-    // fallback: 전년도
+    // fallback: 2023년
     if (!targetYear) {
-      targetYear = new Date().getFullYear() - 1;
+      targetYear = 2023;
       console.log('Using fallback year:', targetYear);
     }
   }
@@ -52,20 +55,29 @@ export async function getRefugeeData(
   console.log('Requesting UNHCR data for year:', targetYear);
   
   const params = new URLSearchParams({
-    yearFrom: targetYear.toString(),
-    yearTo: targetYear.toString(),
-    limit: '100',
+    'year[]': targetYear.toString(),
+    limit: '1000',
   });
 
+  // 국가 코드가 있으면 필터 추가
   if (countryCode) {
-    params.append('coo_iso', countryCode); // Country of Origin
+    if (type === 'origin') {
+      params.append('coo', countryCode); // Country of Origin
+    } else if (type === 'asylum') {
+      params.append('coa', countryCode); // Country of Asylum
+    } else {
+      // 둘 다 가져오기 위해 두 번 호출
+      const originData = await getRefugeeData(countryCode, targetYear, 'origin');
+      const asylumData = await getRefugeeData(countryCode, targetYear, 'asylum');
+      return [...originData, ...asylumData];
+    }
   }
 
   console.log('UNHCR API URL:', `${BASE_URL}/population/?${params.toString()}`);
 
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000); // 8초 타임아웃
+    const timeout = setTimeout(() => controller.abort(), 15000);
 
     const response = await fetch(`${BASE_URL}/population/?${params.toString()}`, {
       signal: controller.signal,
@@ -82,10 +94,7 @@ export async function getRefugeeData(
       throw new Error(`UNHCR API error: ${response.status}`);
     }
 
-    // Content-Type 확인
     const contentType = response.headers.get('content-type');
-    
-    // 응답을 텍스트로 먼저 확인
     const text = await response.text();
     
     let data;
@@ -96,9 +105,8 @@ export async function getRefugeeData(
       return [];
     }
     
-    // UNHCR API는 { items: [...] } 구조로 응답합니다
     if (data && Array.isArray(data.items)) {
-      console.log('Received', data.items.length, 'items, first year:', data.items[0]?.year);
+      console.log('Received', data.items.length, 'items');
       return data.items;
     }
     
