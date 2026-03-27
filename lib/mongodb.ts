@@ -1,12 +1,12 @@
 // MongoDB 연결 설정
 import { MongoClient, Db } from 'mongodb';
 
-const MONGODB_URI = process.env.MONGODB_URI;
-const MONGODB_DB = process.env.MONGODB_DB || 'economy';
-
-if (!MONGODB_URI) {
+if (!process.env.MONGODB_URI) {
   throw new Error('Please define the MONGODB_URI environment variable');
 }
+
+const MONGODB_URI: string = process.env.MONGODB_URI;
+const MONGODB_DB = process.env.MONGODB_DB || 'economy';
 
 interface MongoClientCache {
   client: MongoClient | null;
