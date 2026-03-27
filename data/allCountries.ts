@@ -156,7 +156,6 @@ export const ALL_COUNTRIES: CountryBasicInfo[] = [
   { iso3: 'CHE', name: 'Switzerland', nameKo: '스위스', region: 'Western Europe', coordinates: [46.8182, 8.2275] },
   { iso3: 'UKR', name: 'Ukraine', nameKo: '우크라이나', region: 'Eastern Europe', coordinates: [48.3794, 31.1656] },
   { iso3: 'GBR', name: 'United Kingdom', nameKo: '영국', region: 'Northern Europe', coordinates: [55.3781, -3.4360] },
-  { iso3: 'VAT', name: 'Vatican City', nameKo: '바티칸', region: 'Southern Europe', coordinates: [41.9029, 12.4534] },
 
   // Americas
   { iso3: 'ATG', name: 'Antigua and Barbuda', nameKo: '앤티가 바부다', region: 'Caribbean', coordinates: [17.0608, -61.7964] },

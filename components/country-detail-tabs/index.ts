@@ -7,6 +7,7 @@ export { default as FoodTab } from './FoodTab';
 export { default as ScoresTab } from './ScoresTab';
 export { default as ConflictTab } from './ConflictTab';
 export { default as RefugeeTab } from './RefugeeTab';
+export { default as SummaryTab } from './SummaryTab';
 
 // Common components
 export { default as DataRow } from './DataRow';

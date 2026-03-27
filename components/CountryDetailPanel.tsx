@@ -1,7 +1,7 @@
 'use client';
 
 import { CountryData } from '@/types';
-import { X, DollarSign, Activity, GraduationCap, Wheat, Shield, Home, TrendingUp, TrendingDown, Users, Info } from 'lucide-react';
+import { X, DollarSign, Activity, GraduationCap, Wheat, Shield, Home, TrendingUp, TrendingDown, Users, Info, Sparkles } from 'lucide-react';
 import { formatNumber, formatCurrency, getUrgencyColor, getCountryFlagUrl } from '@/utils/helpers';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { cn } from '@/lib/utils';
@@ -14,6 +14,7 @@ import {
   ScoresTab,
   ConflictTab,
   RefugeeTab,
+  SummaryTab,
   FoodSecurityAPIData,
   ConflictAPIData,
   RefugeeAPIData,
@@ -28,7 +29,7 @@ interface CountryDetailPanelProps {
   onClose: () => void;
 }
 
-type TabType = 'overview' | 'economy' | 'health' | 'education' | 'food' | 'scores' | 'conflict' | 'refugee';
+type TabType = 'overview' | 'economy' | 'health' | 'education' | 'food' | 'scores' | 'conflict' | 'refugee' | 'summary';
 
 export default function CountryDetailPanel({ country, onClose }: CountryDetailPanelProps) {
   if (!country) return null;
@@ -183,8 +184,99 @@ export default function CountryDetailPanel({ country, onClose }: CountryDetailPa
     }
   }, [activeTab, country, educationData]);
 
+  // Fetch all data when summary tab is active
+  useEffect(() => {
+    if (activeTab === 'summary' && country) {
+      // Economy
+      if (!economyData && !loadingEconomyData) {
+        setLoadingEconomyData(true);
+        fetch(`/api/countries/${country.iso3}/economy`)
+          .then(res => res.json())
+          .then(response => {
+            if (response.success) {
+              setEconomyData(response.data);
+            }
+          })
+          .catch(error => console.error('Error loading economy data:', error))
+          .finally(() => setLoadingEconomyData(false));
+      }
+
+      // Health
+      if (!healthData && !loadingHealthData) {
+        setLoadingHealthData(true);
+        fetch(`/api/countries/${country.iso3}/health`)
+          .then(res => res.json())
+          .then(response => {
+            if (response.success) {
+              setHealthData(response.data);
+            }
+          })
+          .catch(error => console.error('Error loading health data:', error))
+          .finally(() => setLoadingHealthData(false));
+      }
+
+      // Education
+      if (!educationData && !loadingEducationData) {
+        setLoadingEducationData(true);
+        fetch(`/api/countries/${country.iso3}/education`)
+          .then(res => res.json())
+          .then(response => {
+            if (response.success) {
+              setEducationData(response.data);
+            }
+          })
+          .catch(error => console.error('Error loading education data:', error))
+          .finally(() => setLoadingEducationData(false));
+      }
+
+      // Food Security
+      if (!foodSecurityData && !loadingFoodData) {
+        setLoadingFoodData(true);
+        fetch(`/api/countries/${country.iso3}/food-security`)
+          .then(res => res.json())
+          .then(response => {
+            if (response.success) {
+              setFoodSecurityData(response.data);
+            }
+          })
+          .catch(error => console.error('Error loading food security data:', error))
+          .finally(() => setLoadingFoodData(false));
+      }
+
+      // Conflict
+      if (!conflictData && !loadingConflictData) {
+        setLoadingConflictData(true);
+        fetch(`/api/countries/${country.iso3}/conflict`)
+          .then(res => res.json())
+          .then(response => {
+            if (response.success) {
+              setConflictData(response.data);
+            }
+          })
+          .catch(error => console.error('Error loading conflict data:', error))
+          .finally(() => setLoadingConflictData(false));
+      }
+
+      // Refugee
+      if (!refugeeData && !loadingRefugeeData) {
+        setLoadingRefugeeData(true);
+        fetch(`/api/countries/${country.iso3}/refugee`)
+          .then(res => res.json())
+          .then(response => {
+            if (response.success) {
+              setRefugeeData(response.data);
+            }
+          })
+          .catch(error => console.error('Error loading refugee data:', error))
+          .finally(() => setLoadingRefugeeData(false));
+      }
+    }
+  }, [activeTab, country, economyData, healthData, educationData, foodSecurityData, conflictData, refugeeData, 
+      loadingEconomyData, loadingHealthData, loadingEducationData, loadingFoodData, loadingConflictData, loadingRefugeeData]);
+
   const tabs = [
     { id: 'overview', label: 'Overview', icon: Info },
+    { id: 'summary', label: 'AI Summary', icon: Sparkles },
     { id: 'economy', label: 'Economy', icon: DollarSign },
     { id: 'health', label: 'Health', icon: Activity },
     { id: 'education', label: 'Education', icon: GraduationCap },
@@ -208,6 +300,24 @@ export default function CountryDetailPanel({ country, onClose }: CountryDetailPa
     switch (activeTab) {
       case 'overview':
         return <OverviewTab country={validCountry} />;
+      case 'summary':
+        return (
+          <SummaryTab 
+            country={validCountry}
+            economyData={economyData}
+            healthData={healthData}
+            educationData={educationData}
+            foodSecurityData={foodSecurityData}
+            conflictData={conflictData}
+            refugeeData={refugeeData}
+            loadingEconomy={loadingEconomyData}
+            loadingHealth={loadingHealthData}
+            loadingEducation={loadingEducationData}
+            loadingFood={loadingFoodData}
+            loadingConflict={loadingConflictData}
+            loadingRefugee={loadingRefugeeData}
+          />
+        );
       case 'economy':
         return <EconomyTab country={validCountry} economyData={economyData} loading={loadingEconomyData} />;
       case 'health':
